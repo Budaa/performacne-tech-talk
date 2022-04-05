@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 20,
   },
+  header: { fontSize: 22, textAlign: "center", padding: 20 },
 });
 
 export const Fast = () => {
@@ -24,10 +25,6 @@ export const Fast = () => {
     }
   }, {});
   ({});
-
-  const scoreBreed = (id) => {
-    dispatch({type: "SCORE", payload: id});
-  };
 
   const fetchCats = async () => {
     const { data } = await catsAPI.get("/breeds");
@@ -58,26 +55,20 @@ export const Fast = () => {
     fetchCats();
   }, []);
 
-  const voteUp = React.useCallback(
-    (id) => {
-      scoreBreed(id);
-    },
-    []
-  );
+  const voteUp = React.useCallback((id) => {
+    dispatch({ type: "SCORE", payload: id });
+  }, []);
 
   useLogReRender("App");
-
 
   const renderItem = useCallback(
     ({ item: breed }) => {
       return (
-        <View style={{ marginTop: 50 }}>
-          <BreedDetails
-            breed={breed}
-            rating={R.path([breed.id, "score"])(catRatings)}
-            voteUp={voteUp}
-          />
-        </View>
+        <BreedDetails
+          breed={breed}
+          rating={R.path([breed.id, "score"])(catRatings)}
+          voteUp={voteUp}
+        />
       );
     },
     [catRatings]
@@ -87,9 +78,7 @@ export const Fast = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 22, textAlign: "center", padding: 20 }}>
-        Cat Breeds 🐈
-      </Text>
+      <Text style={styles.header}>Cat Breeds 🐈</Text>
       <FlatList
         data={breeds}
         renderItem={renderItem}
